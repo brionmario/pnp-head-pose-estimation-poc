@@ -35,7 +35,7 @@ def main():
     face_detector = dlib.get_frontal_face_detector()
     landmark_detector = dlib.shape_predictor('../etc/shape_predictor_68_face_landmarks.dat')
 
-    while (True):
+    while True:
 
         # Capture frame-by-frame
         ret, frame = video_capture.read()
