@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+
+This can be used to measure head pose estimation using
+68 facial landmark detection along with haar cascade face detection.
+
+"""
 
 import numpy
 import cv2
