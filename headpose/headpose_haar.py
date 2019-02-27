@@ -173,11 +173,29 @@ def main():
             roi_w = cam_w
             roi_h = cam_h
 
-        # Checking wich kind of face it is returned
+        # Checking which kind of face it is returned
         if (custom_cascade.face_type > 0):
 
             # Face found, reset the error counter
             no_face_counter = 0
+
+            # display the type of face on screen
+            if custom_cascade.face_type == 1:
+                face_type = 'frontal'
+            elif custom_cascade.face_type == 2:
+                face_type = 'frontal rotated left'
+            elif custom_cascade.face_type == 3:
+                face_type = 'frontal rotated right'
+            elif custom_cascade.face_type == 4:
+                face_type = 'profile left'
+            elif custom_cascade.face_type == 5:
+                face_type = 'profile right'
+            else:
+                face_type = 'undefined'
+
+            text = "Face found. Type: {}".format(face_type)
+            cv2.putText(frame, text, (10, 20), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5, (0, 0, 255), 2)
 
             # Because the dlib landmark detector wants a precise
             # boundary box of the face, it is necessary to resize
@@ -290,12 +308,8 @@ def main():
             text_x1 = roi_x1
             text_y1 = roi_y1 - 3
             if (text_y1 < 0): text_y1 = 0
-            cv2.putText(frame, "ROI", (text_x1, text_y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1);
-            cv2.rectangle(frame,
-                          (roi_x1, roi_y1),
-                          (roi_x2, roi_y2),
-                          (0, 255, 255),
-                          2)
+            # cv2.putText(frame, "ROI", (text_x1, text_y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1);
+            # cv2.rectangle(frame,(roi_x1, roi_y1),(roi_x2, roi_y2),(0, 255, 255),2)
 
         # Showing the frame and waiting
         # for the exit command
