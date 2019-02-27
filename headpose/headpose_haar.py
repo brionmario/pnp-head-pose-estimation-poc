@@ -138,7 +138,7 @@ def main():
     roi_resize_w = int(cam_w / 10)
     roi_resize_h = int(cam_h / 10)
 
-    while (True):
+    while True:
 
         # Capture frame-by-frame
         ret, frame = video_capture.read()
@@ -159,12 +159,12 @@ def main():
                                 rotationAngleCW=-30, lastFaceType=custom_cascade.face_type)
 
         # Accumulate error values in a counter
-        if (custom_cascade.face_type == 0):
+        if custom_cascade.face_type == 0:
             no_face_counter += 1
 
         # If any face is found for a certain
         # number of cycles, then the ROI is reset
-        if (no_face_counter == 50):
+        if no_face_counter == 50:
             no_face_counter = 0
             roi_x1 = 0
             roi_y1 = 0
@@ -174,7 +174,7 @@ def main():
             roi_h = cam_h
 
         # Checking which kind of face it is returned
-        if (custom_cascade.face_type > 0):
+        if custom_cascade.face_type > 0:
 
             # Face found, reset the error counter
             no_face_counter = 0
@@ -201,7 +201,7 @@ def main():
             # boundary box of the face, it is necessary to resize
             # the box returned by the OpenCV haar detector.
             # Adjusting the frame for profile left
-            if (custom_cascade.face_type == 4):
+            if custom_cascade.face_type == 4:
                 face_margin_x1 = 20 - 10  # resize_rate + shift_rate
                 face_margin_y1 = 20 + 5  # resize_rate + shift_rate
                 face_margin_x2 = -20 - 10  # resize_rate + shift_rate
@@ -209,7 +209,7 @@ def main():
                 face_margin_h = -0.7  # resize_factor
                 face_margin_w = -0.7  # resize_factor
             # Adjusting the frame for profile right
-            elif (custom_cascade.face_type == 5):
+            elif custom_cascade.face_type == 5:
                 face_margin_x1 = 20 + 10
                 face_margin_y1 = 20 + 5
                 face_margin_x2 = -20 + 10
@@ -235,27 +235,27 @@ def main():
 
             # Updating the ROI position
             roi_x1 = face_x1 - roi_resize_w
-            if (roi_x1 < 0): roi_x1 = 0
+            if roi_x1 < 0: roi_x1 = 0
             roi_y1 = face_y1 - roi_resize_h
-            if (roi_y1 < 0): roi_y1 = 0
+            if roi_y1 < 0: roi_y1 = 0
             roi_w = face_w + roi_resize_w + roi_resize_w
-            if (roi_w > cam_w): roi_w = cam_w
+            if roi_w > cam_w: roi_w = cam_w
             roi_h = face_h + roi_resize_h + roi_resize_h
-            if (roi_h > cam_h): roi_h = cam_h
+            if roi_h > cam_h: roi_h = cam_h
             roi_x2 = face_x2 + roi_resize_w
-            if (roi_x2 > cam_w): roi_x2 = cam_w
+            if roi_x2 > cam_w: roi_x2 = cam_w
             roi_y2 = face_y2 + roi_resize_h
-            if (roi_y2 > cam_h): roi_y2 = cam_h
+            if roi_y2 > cam_h: roi_y2 = cam_h
 
             # Debugging printing utilities
-            if (DEBUG == True):
+            if DEBUG == True:
                 print("FACE: ", face_x1, face_y1, face_x2, face_y2, face_w, face_h)
                 print("ROI: ", roi_x1, roi_y1, roi_x2, roi_y2, roi_w, roi_h)
                 # Drawing a green rectangle
                 # (and text) around the face.
                 text_x1 = face_x1
                 text_y1 = face_y1 - 3
-                if (text_y1 < 0): text_y1 = 0
+                if text_y1 < 0: text_y1 = 0
                 cv2.putText(frame, "FACE", (text_x1, text_y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1);
                 cv2.rectangle(frame,
                               (face_x1, face_y1),
@@ -265,11 +265,11 @@ def main():
 
             # In case of a frontal/rotated face it
             # is called the landamark detector
-            if (custom_cascade.face_type > 0):
+            if custom_cascade.face_type > 0:
                 landmarks_2D = landmark_detector.return_landmarks(frame, face_x1, face_y1, face_x2, face_y2,
                                                                   points_to_return=TRACKED_POINTS)
 
-                if (DEBUG == True):
+                if DEBUG == True:
                     # cv2.drawKeypoints(frame, landmarks_2D)
 
                     for point in landmarks_2D:
@@ -304,10 +304,10 @@ def main():
 
         # Drawing a yellow rectangle
         # (and text) around the ROI.
-        if (DEBUG == True):
+        if DEBUG == True:
             text_x1 = roi_x1
             text_y1 = roi_y1 - 3
-            if (text_y1 < 0): text_y1 = 0
+            if text_y1 < 0: text_y1 = 0
             # cv2.putText(frame, "ROI", (text_x1, text_y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1);
             # cv2.rectangle(frame,(roi_x1, roi_y1),(roi_x2, roi_y2),(0, 255, 255),2)
 
