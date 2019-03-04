@@ -12,7 +12,7 @@ face detection in dlib.
 import time
 import cv2
 import dlib
-from imutils import face_utils
+import numpy as np
 
 # If True enables the verbose mode
 DEBUG = True
@@ -53,20 +53,33 @@ def main():
 
         # loop over the face detections
         for face in faces:
-            # compute the bounding box of the face and draw it on the frame
-            (bX, bY, bW, bH) = face_utils.rect_to_bb(face)
-            cv2.rectangle(frame, (bX, bY), (bX + bW, bY + bH),
+            left = face.left()
+            top = face.top()
+            right = face.right()
+            bottom = face.bottom()
+
+            # Drawing a green rectangle (and text) around the face.
+            label_x = left
+            label_y = top - 3
+            if label_y < 0:
+                label_y = 0
+            cv2.putText(frame, "FACE", (label_x, label_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            cv2.rectangle(frame, (left, top), (right, bottom),
                           (0, 255, 0), 1)
 
             # determine the facial landmarks for the face region, then
-            # convert the facial landmark (x, y)-coordinates to a NumPy
-            # array
+            # convert the facial landmark (x, y)-coordinates to a NumPy array
             shape = landmark_detector(gray, face)
-            shape = face_utils.shape_to_np(shape)
+            landmark_coords = np.zeros((shape.num_parts, 2), dtype="int")
+
+            # loop over all facial landmarks and convert them
+            # to a 2-tuple of (x, y)-coordinates
+            for i in range(0, shape.num_parts):
+                landmark_coords[i] = (shape.part(i).x, shape.part(i).y)
 
             # loop over the (x, y)-coordinates for the facial landmarks
             # and draw each of them
-            for (i, (x, y)) in enumerate(shape):
+            for (i, (x, y)) in enumerate(landmark_coords):
                 cv2.circle(frame, (x, y), 1, (0, 0, 255), -1)
                 cv2.putText(frame, str(i + 1), (x - 10, y - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
